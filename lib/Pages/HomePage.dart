@@ -46,15 +46,30 @@ class _HomeState extends State<HomePage> {
 
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
+
   final GoogleSignIn googleSignIn = new GoogleSignIn();
   final facebookLogin = FacebookLogin();
 
+  Firestore _fireStore = Firestore.instance;
+  String ref = "users";
+
   TextEditingController _searchController = TextEditingController();
+
+
+
 
   Future<Null> signOut() async {
     // Sign out with firebase
     await firebaseAuth.signOut();
     // Sign out with google
+    // AuthResult result = await firebaseAuth.signInWithEmailAndPassword(
+    //     email: _emailEditingController.text,
+    //     password: _passwordEditingController.text
+    // );
+    // FirebaseUser user = result.user;
+    // Firestore.instance.collection("users").document(user.uid).updateData({
+    //   "isLoggedIn" : false
+    // });
     await googleSignIn.signOut();
     //Sign out with Facebook
     await facebookLogin.logOut();
@@ -1173,7 +1188,16 @@ class _HomeState extends State<HomePage> {
               ),
             ),
             InkWell(
-              onTap: () {
+              onTap: () async{
+                //
+                // AuthResult result = await firebaseAuth.signInWithEmail(
+                //     email: data["email"],
+                // );
+                // FirebaseUser user = result.user;
+                // Firestore.instance.collection("users").document(data["uid"]).updateData({
+                //   "isLoggedIn" : false,
+                //   "role" : "clientt"
+                // });
                 signOut();
               },
               child: ListTile(
@@ -1310,6 +1334,8 @@ class DataSearch extends SearchDelegate<String>{
         }
     );
   }
+
+
 }
 
 

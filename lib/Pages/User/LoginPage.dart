@@ -900,11 +900,17 @@ class _LoginPageState extends State<LoginPage> {
         // ignore: missing_return
         docRef.get().then((documentSnapshot) async {
           if(documentSnapshot["isLoggedIn"] == true){
-            setState(() {
-              isLoggedIn = false;
+            Firestore.instance.collection("users").document(user.uid).updateData({
+              "isLoggedIn" : true
             });
+
+            assert(user != null);
+            assert(await user.getIdToken() != null);
+
+            assert(user.uid == currentUser.uid);
+
             Fluttertoast.showToast(
-                msg: "This account is already logged in in other device!!",
+                msg: "Logged in successfully!!",
                 toastLength: Toast.LENGTH_LONG,
                 gravity: ToastGravity.BOTTOM,
                 timeInSecForIosWeb: 2,
@@ -912,6 +918,8 @@ class _LoginPageState extends State<LoginPage> {
                 textColor: Colors.white,
                 fontSize: 15.0
             );
+
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomePage(user: user,)));
           }else if(documentSnapshot["isLoggedIn"] == false ){
             Firestore.instance.collection("users").document(user.uid).updateData({
               "isLoggedIn" : true
